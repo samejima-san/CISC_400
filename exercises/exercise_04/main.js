@@ -2,9 +2,10 @@
 // Vertex shader program
 var VSHADER_SOURCE = 
   'attribute vec4 a_Position;\n' + // attribute variable
+  'attribute float a_Size;\n' +
   'void main() {\n' +
   '  gl_Position = a_Position;\n' +
-  '  gl_PointSize = 15.0;\n' +
+  '  gl_PointSize = a_Size;\n' +
   '}\n'; 
 
 // Fragment shader program
@@ -37,8 +38,16 @@ function main() {
     return;
   }
 
+  let a_Size = gl.getAttribLocation(gl.program, 'a_Size');
+  if (a_Size < 0) {
+    console.log('Failed to get the storage location of a_Size');
+    return;
+  }
+
   // Pass vertex position to attribute variable
   gl.vertexAttrib3f(a_Position, 0.0, 0.0, 0.0);
+
+  gl.vertexAttrib1f(a_Size, 15.0);
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
