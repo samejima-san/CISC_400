@@ -1,0 +1,8 @@
+when you stop clearing the canvas on line 64 the background goes away
+this happens because you redraw the canvas with everything added 
+and the background has to be defined, and is defined black on clear.
+
+the same issue occurs when we change the behavior on line 69, changing
+it to only draw the new point rather than looping through the array of 
+points. When we draw something new everything else is erased because
+it needs to be redrawn and we no longer have that information.
