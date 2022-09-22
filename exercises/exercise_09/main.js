@@ -49,13 +49,12 @@ function main() {
 
 function initVertexBuffers(gl) {
   var vertices = new Float32Array([
-    -0.2, 0.4,  0.0, 0.1, 0.2, 0.3,
-    0.1, 0.05,  0.3, 0.2, 0.2, .02,
-    0.5, 0,  0.5, -0.2, 0.2, -0.4,
-
+    -.5,-0.5, 0.0,0.0,      -0.5, 0.5,
+    .5,.5, .5,-.5
+    
     
   ]);
-  var n = 9; // The number of vertices
+  var n = vertices.length/2; // The number of vertices
 
   // Create a buffer object
   var vertexBuffer = gl.createBuffer();
