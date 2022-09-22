@@ -1,0 +1,13 @@
+/*
+ use flexbox to center the canvas in the center of the page
+*/
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+
