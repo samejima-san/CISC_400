@@ -42,3 +42,6 @@ line 11-14 does the same thing, more error handling to detemine whether the
 shaders have been initialized or not.
 
 
+Problem 8: x^2 + y^2 = r^2 didn't really help me the way I implemented the circle
+
+
