@@ -1,0 +1,44 @@
+Problem 1:
+Pixel - a pixel is the smallest thing displayed on a computer, it has 3 values
+red, green, blue and is a grid that work together to create all images
+on a computer monitor.
+
+Frame - a frame is one image in a set of images, for example, if your 
+computer is 60hz it goes through 60 frames per second, the user
+sees 60 different frames every second.
+
+Aliasing/AntiAliasing - The aliasing is that serration you see on 
+borders around 3d objects when they're being rendered,The 
+antialiasing is a blur effect that smoothens those borders. 
+In video games we see antialiasing with fencing a lot.
+
+Resolution - resolution is the amount of pixels a specific monitor has
+it is measured by height and width, most monitors today have
+1920 by 1080 resolutions and we just call that 1080p resolution.
+but if we multiply 1920 x 1080 that is how many pixels that are
+making up the resolution of that monitor.
+
+bitmap/pixelmap - a bitmap is a map that has 1 bit of information in each
+value whereas a pixelmap has 2 or more bits of information in those values
+
+bitdepth - is the number of colors a specific monitor can output.
+
+Problem 2:
+A vertex shader determines the shapes position
+A fragment shader determines a shapes color
+
+Problem 3:
+line 1 and 15 are the opening and closing tags in html that tells the file
+that the lines inbetween are javascript
+
+line 3 is assigning the canvas tag to a variable in javascript via its ID
+
+line 5 is making the canvas have webgl functionality
+
+line 6-9 is error handling whether gl returns the webglcontext or not, 
+console logs upon failure
+
+line 11-14 does the same thing, more error handling to detemine whether the
+shaders have been initialized or not.
+
+
