@@ -45,30 +45,29 @@ function main() {
   }
 
   let vertices = new Float32Array([]);
-  var n = vertices.length/2; // The number of vertices
  
 
-  let circleXY = (/*Vector3f*/ center, /*float*/ radius, /*int*/ dots) => {
+  let circleXY = ( center, radius, dots) => {
     stepSize = ((2*Math.PI)/dots);
     let points = [];
     for (let d = 0; d <= (2*Math.PI)-stepSize; d += stepSize) {
       //add the x and y coordinates into the Float32Array
-      points.push(((Math.sin(d) * radius) + center[0]), ((Math.cos(d) * radius) + center[1]));
+      //reduce the float to 2 decimal places
+      let num1 = ((Math.sin(d) * radius) + center[0]);
+      let num2 = ((Math.cos(d) * radius) + center[1]);
+      points.push(parseFloat(num1));
+      points.push(parseFloat(num2));
     }
     return points;
   }
 
   let points = circleXY([0.0,0.0,0.0], 0.5, 100);
+  var n = 50; // The number of vertices
   vertices = new Float32Array(points);
   console.log(vertices);
 
-  var len = vertices.length;
-  for(var i = 0; i < len; i+=2) {
-  // Pass vertex position to attribute variable
-  gl.vertexAttrib3f(a_Position, vertices[i], vertices[i+1], 0.0);
-  }
 
-  gl.vertexAttrib1f(a_Size, 1.0);
+  gl.vertexAttrib1f(a_Size, 10.0);
 
   // Specify the color for clearing <canvas>
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -76,6 +75,17 @@ function main() {
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
     
-  // Draw
-  gl.drawArrays(gl.POINTS, 0, 1);
+
+
+  
+  var len = vertices.length;
+  for(var i = 0; i < len; i+=2) {
+    // Pass vertex position to attribute variable
+    gl.vertexAttrib3f(a_Position, vertices[i], vertices[i+1], 0.0);
+    // Draw
+    gl.drawArrays(gl.POINTS, 0, 1);
+  }
+  
+
+
 }
