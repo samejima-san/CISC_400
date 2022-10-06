@@ -45,6 +45,12 @@ function main() {
     return;
   }
 
+  let u_CosB = gl.getUniformLocation(gl.program, 'u_CosB');
+  let u_SinB = gl.getUniformLocation(gl.program, 'u_SinB');
+  if (!u_CosB || !u_SinB) {
+    console.log('Failed to get the storage location of u_CosB or u_SinB');
+    return;
+  }
 
 
   // Specify the color for clearing <canvas>
@@ -80,6 +86,11 @@ function initVertexBuffers(gl) {
     console.log('Failed to get the storage location of a_Position');
     return -1;
   }
+
+  //rotate triangle
+  gl.uniform1f(gl.getUniformLocation(gl.program, 'u_CosB'), Math.cos(angle * Math.PI / angle));
+  gl.uniform1f(gl.getUniformLocation(gl.program, 'u_SinB'), Math.sin(angle * Math.PI / angle));
+
   // Assign the buffer object to a_Position variable
   gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
 
