@@ -3,9 +3,8 @@
 var VSHADER_SOURCE =
 //get matrix from uniform
   'attribute vec4 a_Position;\n' + // attribute variable
-  'uniform mat4 u_xformMatrix;\n' +
   'void main() {\n' +
-  '  gl_Position = u_xformMatrix * a_Position;\n' +
+  '  gl_Position = a_Position;\n' +
   '}\n';
 
   //fragment shader program
@@ -41,23 +40,6 @@ function main() {
     return;
   }
 
-  
-  //get matrix from uniform
-  var u_xformMatrix = gl.getUniformLocation(gl.program, 'u_xformMatrix');
-     if (!u_xformMatrix) {
-       console.log('Failed to get the storage location of u_xformMatrix');
-       return;
-  }
-
-  //create matrix
-  var xformMatrix = new Matrix4();
-  //set matrix
-  xformMatrix.setScale(0.5, 0.5, 1.0);
-  //this is kinda creating a different matrix and transferring its elements to the other one
-
-  //set scale
-  gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix.elements);
-
 
      
 
@@ -73,9 +55,19 @@ function main() {
 }
 
 function initVertexBuffers(gl) {
+
+  let newvert = [ -0.5, 0.5,   -0.5, -0.5,   0.5, 0.5, 0.5, -0.5 ];
+  let scale = 0.5;
+  for (var i = 0; i < 8; i++) {
+    newvert[i] = newvert[i] * scale;
+  }
+
+  
   var vertices = new Float32Array([
-    -0.5, 0.5,   -0.5, -0.5,   0.5, 0.5, 0.5, -0.5
+    newvert[0], newvert[1], newvert[2], newvert[3], newvert[4], newvert[5], newvert[6], newvert[7]
   ]);
+
+
 
 
   var n = 4; // The number of vertices
