@@ -1,24 +1,29 @@
-// HelloQuad.js (c) 2012 matsuda
+// HelloTriangle.js (c) 2012 matsuda
 // Vertex shader program
 var VSHADER_SOURCE =
-//get matrix from uniform
-  'attribute vec4 a_Position;\n' + // attribute variable
-  'uniform mat4 u_xformMatrix;\n' +
+  // x' = x codB - y sinB
+  // y' = x sinB + y cosB
+  // z' = z
+  'attribute vec4 a_Position;\n' +
+  'uniform float u_CosB, u_SinB;\n' +
   'void main() {\n' +
-  '  gl_Position = u_xformMatrix * a_Position;\n' +
+  '  gl_Position.x = a_Position.x * u_CosB - a_Position.y * u_SinB;\n' +
+  '  gl_Position.y = a_Position.x * u_SinB + a_Position.y * u_CosB;\n' +
+  '  gl_Position.z = a_Position.z;\n' +
+  '  gl_Position.w = 1.0;\n' +
   '}\n';
 
-  //fragment shader program
-  var FSHADER_SOURCE =
+
+let angle = 90.0;
+// Fragment shader program
+var FSHADER_SOURCE =
   'void main() {\n' +
   '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
   '}\n';
 
-
 function main() {
   // Retrieve <canvas> element
   var canvas = document.getElementById('webgl');
-
 
   // Get the rendering context for WebGL
   var gl = getWebGLContext(canvas);
@@ -26,13 +31,12 @@ function main() {
     console.log('Failed to get the rendering context for WebGL');
     return;
   }
-
+  
   // Initialize shaders
   if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
     console.log('Failed to intialize shaders.');
     return;
   }
-
 
   // Write the positions of vertices to a vertex shader
   var n = initVertexBuffers(gl);
@@ -41,25 +45,12 @@ function main() {
     return;
   }
 
-  
-  //get matrix from uniform
-  var u_xformMatrix = gl.getUniformLocation(gl.program, 'u_xformMatrix');
-     if (!u_xformMatrix) {
-       console.log('Failed to get the storage location of u_xformMatrix');
-       return;
+  let u_CosB = gl.getUniformLocation(gl.program, 'u_CosB');
+  let u_SinB = gl.getUniformLocation(gl.program, 'u_SinB');
+  if (!u_CosB || !u_SinB) {
+    console.log('Failed to get the storage location of u_CosB or u_SinB');
+    return;
   }
-
-  //create matrix
-  var xformMatrix = new Matrix4();
-  //set matrix
-  xformMatrix.setScale(2, 0.5, 1.0);
-  //this is kinda creating a different matrix and transferring its elements to the other one
-
-  //set scale
-  gl.uniformMatrix4fv(u_xformMatrix, false, xformMatrix.elements);
-
-
-     
 
 
   // Specify the color for clearing <canvas>
@@ -69,16 +60,26 @@ function main() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   // Draw the rectangle
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+  gl.drawArrays(gl.TRIANGLES, 0, n);
 }
 
 function initVertexBuffers(gl) {
+  let initverticies = [0, 0.5,   -0.5, -0.5,   0.5, -0.5];
+  let translate = (x,y, verts) => {
+    let newverts = [];
+    for (let i = 0; i < verts.length; i+=2) {
+      newverts.push(verts[i] + x);
+      newverts.push(verts[i+1] + y);
+    }
+    return newverts;
+  }
+  initverticies = translate(-0.1, 0.5, initverticies);
+
   var vertices = new Float32Array([
-    -0.5, 0.5,   -0.5, -0.5,   0.5, 0.5, 0.5, -0.5
+    //spread operator
+    ...initverticies,
   ]);
-
-
-  var n = 4; // The number of vertices
+  var n = 3; // The number of vertices
 
   // Create a buffer object
   var vertexBuffer = gl.createBuffer();
@@ -97,6 +98,11 @@ function initVertexBuffers(gl) {
     console.log('Failed to get the storage location of a_Position');
     return -1;
   }
+
+  //rotate triangle
+  gl.uniform1f(gl.getUniformLocation(gl.program, 'u_CosB'), Math.cos(angle * Math.PI / angle));
+  gl.uniform1f(gl.getUniformLocation(gl.program, 'u_SinB'), Math.sin(angle * Math.PI / angle));
+
   // Assign the buffer object to a_Position variable
   gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
 
