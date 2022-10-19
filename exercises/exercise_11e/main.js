@@ -16,10 +16,18 @@ var VSHADER_SOURCE =
 
 let angle = 90.0;
 // Fragment shader program
+var VSHADER_SOURCE =
+'attribute vec4 a_Position;\n' +
+'uniform mat4 u_ModelMatrix;\n' +
+'void main() {\n' +
+'  gl_Position = u_ModelMatrix * a_Position;\n' +
+'}\n';
+
+// Fragment shader program
 var FSHADER_SOURCE =
-  'void main() {\n' +
-  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
-  '}\n';
+'void main() {\n' +
+'  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+'}\n';
 
 function main() {
   // Retrieve <canvas> element
@@ -45,12 +53,7 @@ function main() {
     return;
   }
 
-  let u_CosB = gl.getUniformLocation(gl.program, 'u_CosB');
-  let u_SinB = gl.getUniformLocation(gl.program, 'u_SinB');
-  if (!u_CosB || !u_SinB) {
-    console.log('Failed to get the storage location of u_CosB or u_SinB');
-    return;
-  }
+
 
 
   // Specify the color for clearing <canvas>
