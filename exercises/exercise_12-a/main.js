@@ -55,12 +55,19 @@ function main() {
   let currentTranslate = 0.0;
   // Model matrix
   var modelMatrix = new Matrix4();
-
+  let translation = .01;
   // Start drawing
   var tick = function() {
+    
    // currentAngle = animate(currentAngle);  // Update the rotation angle
-    currentTranslate = animateTranslation(currentTranslate);
-    draw(gl, n, currentTranslate, modelMatrix, u_ModelMatrix);   // Draw the triangle
+    currentTranslate = currentTranslate + translation;
+
+    if(currentTranslate > 1.0 || currentTranslate < -1.0) {
+      translation = translation * -1;
+    }
+
+    //draw(gl, n, currentTranslate, modelMatrix, u_ModelMatrix);   // Draw the triangle
+    translatesquare(gl, n, currentTranslate, modelMatrix, u_ModelMatrix);
     requestAnimationFrame(tick, canvas); // Request that the browser calls tick
   };
   tick();
@@ -98,19 +105,6 @@ function initVertexBuffers(gl) {
   return n;
 }
 
-function draw(gl, n, currentAngle, modelMatrix, u_ModelMatrix) {
-  // Set the rotation matrix
-  modelMatrix.setRotate(currentAngle, 0, 0, 1); // Rotation angle, rotation axis (0, 0, 1)
- 
-  // Pass the rotation matrix to the vertex shader
-  gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
-
-  // Clear <canvas>
-  gl.clear(gl.COLOR_BUFFER_BIT);
-
-  // Draw the rectangle
-  gl.drawArrays(gl.TRIANGLES, 0, n);
-}
 
 /// Last time that this function was called
 var g_last = Date.now();
@@ -118,24 +112,15 @@ var g_last = Date.now();
 function translatesquare(gl, n, currentTranslate, modelMatrix, u_ModelMatrix) {
   //translate the triangle to the right
   modelMatrix.setTranslate(currentTranslate, 0, 0);
+
   // Pass the rotation matrix to the vertex shader
   gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
 
-    // Clear <canvas>
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    // Draw the rectangle
-    gl.drawArrays(gl.TRIANGLES, 0, n);
-}
-
-function animateTranslation(translate) {
-  // Calculate the elapsed time
-  var now = Date.now();
-  var elapsed = now - g_last;
-  g_last = now;
-  // Update the current rotation angle (adjusted by the elapsed time)
-  var newTranslate = translate + (TRANSLATE_STEP * elapsed) / 1000.0;
-  return newTranslate %= 360;
+  // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  
+  // Draw the rectangle
+  gl.drawArrays(gl.TRIANGLES, 0, n);
 }
 
 function animate(angle) {
