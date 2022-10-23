@@ -52,22 +52,26 @@ function main() {
 
   // Current rotation angle
   var currentAngle = 0.0;
-  let currentTranslate = 0.0;
+  let x = 0.0;
+  let y =0.0;
   // Model matrix
   var modelMatrix = new Matrix4();
-  let translation = .01;
+  let translationx = .03;
+  let translationy = .02;
   // Start drawing
   var tick = function() {
     
    // currentAngle = animate(currentAngle);  // Update the rotation angle
-    currentTranslate = currentTranslate + translation;
-
-    if(currentTranslate > 1.0 || currentTranslate < -1.0) {
-      translation = translation * -1;
+    x = x + translationx;
+    if(x > 1.0 || x< -1.0) {
+      translationx = translationx * -1;
+    }
+    y = y + translationy;
+    if(y>1.0 || y<-1.0) {
+      translationy = translationy * -1;
     }
 
-    //draw(gl, n, currentTranslate, modelMatrix, u_ModelMatrix);   // Draw the triangle
-    translatesquare(gl, n, currentTranslate, modelMatrix, u_ModelMatrix);
+    translatesquare(gl, n, x, y, modelMatrix, u_ModelMatrix);
     requestAnimationFrame(tick, canvas); // Request that the browser calls tick
   };
   tick();
@@ -109,9 +113,9 @@ function initVertexBuffers(gl) {
 /// Last time that this function was called
 var g_last = Date.now();
 
-function translatesquare(gl, n, currentTranslate, modelMatrix, u_ModelMatrix) {
+function translatesquare(gl, n, xloc, yloc, modelMatrix, u_ModelMatrix) {
   //translate the triangle to the right
-  modelMatrix.setTranslate(currentTranslate, 0, 0);
+  modelMatrix.setTranslate(xloc, yloc, 0);
 
   // Pass the rotation matrix to the vertex shader
   gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
