@@ -57,7 +57,7 @@ function main() {
   // Model matrix
   var modelMatrix = new Matrix4();
   let translationx = .03;
-  let translationy = .02;
+  let translationy = .08;
   // Start drawing
   var tick = function() {
     
