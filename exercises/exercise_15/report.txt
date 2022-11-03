@@ -1,0 +1,11 @@
+on line 15  of HelloTriangle_FragCoord, this is the creation of the gradient. 
+The gl_FragColor variable takes in a vector 4, with the combination of some clever math
+and smart placement of each individual color you get a smooth color gradient across 
+entire shape, this being a triangle.
+
+The secret about the gradient is that it is actually spread across the entire canvas and 
+not spread across the triangle itself, if we were to translate or scale the 
+triangle in different ways the color of the gradient will come 
+in different quantities. For example, if I were to translate the gradient 
+on the x axis about .4, the triangle will appear a lot more red than when it 
+is shown at x=0
