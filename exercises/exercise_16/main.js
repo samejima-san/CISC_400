@@ -66,8 +66,7 @@ let inc = 0.01;
   var tick = function() { 
     //-1.50 is the limit
     g_eyeX += inc;
-   if(g_eyeX > 1.5) { inc = -0.01;}
-    else if(g_eyeX < -1.5) { inc = 0.01;}
+   if(g_eyeX > 1.5) { g_eyeX = -1.5;}
     draw(gl, n, u_ViewMatrix, viewMatrix);   // Draw the triangle
     requestAnimationFrame(tick, canvas); // Request that the browser ?calls tick
   };
