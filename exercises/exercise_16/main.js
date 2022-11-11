@@ -19,6 +19,7 @@ var FSHADER_SOURCE =
   'void main() {\n' +
   '  gl_FragColor = v_Color;\n' +
   '}\n';
+  var g_eyeX = .20, g_eyeY = .25, g_eyeZ = .3;
 
 function main() {
   // Retrieve <canvas> element
@@ -60,8 +61,17 @@ function main() {
   document.onkeydown = function(ev){ 
     keydown(ev, gl, n, u_ViewMatrix, viewMatrix); 
   };
-
-  draw(gl, n, u_ViewMatrix, viewMatrix);   // Draw
+let inc = 0.01;
+  //draw(gl, n, u_ViewMatrix, viewMatrix);   // Draw
+  var tick = function() { 
+    //-1.50 is the limit
+    g_eyeX += inc;
+   if(g_eyeX > 1.5) { inc = -0.01;}
+    else if(g_eyeX < -1.5) { inc = 0.01;}
+    draw(gl, n, u_ViewMatrix, viewMatrix);   // Draw the triangle
+    requestAnimationFrame(tick, canvas); // Request that the browser ?calls tick
+  };
+  tick();
 }
 
 function initVertexBuffers(gl) {
@@ -70,10 +80,12 @@ function initVertexBuffers(gl) {
      0.0,  0.5,  -0.4,  0.4,  1.0,  0.4, // The back green one
     -0.5, -0.5,  -0.4,  0.4,  1.0,  0.4,
      0.5, -0.5,  -0.4,  1.0,  0.4,  0.4, 
+
    
      0.5,  0.4,  -0.2,  1.0,  0.4,  0.4, // The middle yellow one
     -0.5,  0.4,  -0.2,  1.0,  1.0,  0.4,
      0.0, -0.6,  -0.2,  1.0,  1.0,  0.4, 
+
 
      0.0,  0.5,   0.0,  0.4,  0.4,  1.0,  // The front blue one 
     -0.5, -0.5,   0.0,  0.4,  0.4,  1.0,
@@ -118,13 +130,13 @@ function initVertexBuffers(gl) {
   return n;
 }
 
-var g_eyeX = 0.20, g_eyeY = 0.25, g_eyeZ = 0.25; // Eye position
+ // Eye position
 function keydown(ev, gl, n, u_ViewMatrix, viewMatrix) {
     if(ev.keyCode == 39) { // The right arrow key was pressed
-      g_eyeX += 0.01;
-    } else 
-    if (ev.keyCode == 37) { // The left arrow key was pressed
-      g_eyeX -= 0.01;
+      g_eyeX += 0.05;
+    } 
+    else if (ev.keyCode == 37) { // The left arrow key was pressed
+      g_eyeX -= 0.05;
     } else { return; }
     draw(gl, n, u_ViewMatrix, viewMatrix);    
 }
@@ -132,6 +144,10 @@ function keydown(ev, gl, n, u_ViewMatrix, viewMatrix) {
 function draw(gl, n, u_ViewMatrix, viewMatrix) {
   // Set the matrix to be used for to set the camera view
   viewMatrix.setLookAt(g_eyeX, g_eyeY, g_eyeZ, 0, 0, 0, 0, 1, 0);
+  // specify the visible range
+  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+  //log g_eyeX, g_eyeY, g_eyeZ in pretty format
+  console.log(" g_eyeX: " + g_eyeX.toFixed(2) + "\n g_eyeY: " + g_eyeY.toFixed(2) + "\n g_eyeZ: " + g_eyeZ.toFixed(2));
 
   // Pass the view projection matrix
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
