@@ -55,19 +55,22 @@ function main() {
     return;
   }
 
-  // Set the eye point and the viewing volume
-  var mvpMatrix = new Matrix4();
-  mvpMatrix.setPerspective(30, 1, 1, 100);
-  mvpMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
 
-  // Pass the model view projection matrix to u_MvpMatrix
-  gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
-
-  // Clear color and depth buffer
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-  // Draw the cube
-  gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+let x, y, z;
+x = 0;
+y = 0;
+z = 0;
+  var tick = function() { 
+    x = x + 1;
+    y = y + 2;
+    z = z + 3;
+    if(x > 360) x = 0;
+    if(y > 360) y = 0;
+    if(z > 360) z = 0;
+    draw(gl, n, u_MvpMatrix, x, y, z);
+    requestAnimationFrame(tick, canvas); // Request that the browser ?calls tick
+  };
+  tick();
 }
 
 function initVertexBuffers(gl) {
@@ -93,9 +96,9 @@ function initVertexBuffers(gl) {
     1.0, 1.0, .25,  .8, 1.0, 1.0,  .25, .25, 1.0,  1.0, 1.0, 1.0,  // v0-v1-v2-v3 front(white)
     1.0, 1.0, 1.0,  1.0, .75, .25,  1.0, 1.0, 1.0,  .2, .75, 1.0,  // v0-v3-v4-v5 right(white)
     .5, .75, 1.0,  1.0, .2, 1.0,  1.0, .25, 1.0,  1.0, 1.0, 1.0,  // v0-v5-v6-v1 up(white)
-    1.0, .25, 1.0,  1.0, .8, 1.0,  1.0, 1.0, 1.0,  1.0, 1.0, 1.0,  // v1-v6-v7-v2 left(white)
+    1.0, .25, 1.0,  1.0, .8, 1.0,  1.0, .9, 1.0,  1.0, 1.0, 1.0,  // v1-v6-v7-v2 left(white)
     1.0, 1.0, .75,  1.0, 1.0, 1.0,  1.0, 1.0, 1.0,  1.0, .9, 1.0,  // v7-v4-v3-v2 down(white)
-    .1, 1.0, 1.0,  1.0, 1.0, 1.0,  1.0, .25, 1.0,  1.0, 1.0, 1.0   // v4-v7-v6-v5 back(white)
+    .4, .8, 1.0,  1.0, .5, 1.0,  1.0, .7, 1.0,  .75, 1.0, 1.0   // v4-v7-v6-v5 back(white)
   ]);
 
   var indices = new Uint8Array([       // Indices of the vertices
@@ -124,6 +127,29 @@ function initVertexBuffers(gl) {
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
   return indices.length;
+}
+
+function draw(gl, n, u_MvpMatrix, xangle, yangle, zangle) {
+
+    // Set the eye point and the viewing volume
+    var mvpMatrix = new Matrix4();
+    mvpMatrix.setPerspective(30, 1, 1, 100);
+    mvpMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
+    // rotate the matrix over the x axis
+    mvpMatrix.rotate(xangle, 1, 0, 0);
+    //rotate the matrix over the y axis
+    mvpMatrix.rotate(yangle, 0, 1, 0);
+    //rotate the matrix over the z axis
+    mvpMatrix.rotate(zangle, 0, 0, 1);
+  
+    // Pass the model view projection matrix to u_MvpMatrix
+    gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+  
+    // Clear color and depth buffer
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  
+    // Draw the cube
+    gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
 }
 
 function initArrayBuffer(gl, data, num, type, attribute) {
