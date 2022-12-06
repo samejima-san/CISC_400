@@ -5,9 +5,9 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    width: 43%;
+    width: 400px;
     height: 2%;
-    margin-bottom: 20px;
+    margin-bottom: 7%;
     padding: 0;
 }
 
