@@ -134,7 +134,7 @@ zone()
     stack.push(otherpoints[i]);
   }
 
-  let speedofye = 0.01;
+  let speedofye = 0.005;
   var tick = function(){
     if(gameover){
       for(let i = 0; i<otherpoints.length;i++){
@@ -155,18 +155,20 @@ zone()
 //each second this function repeats once 
 let i = 0;
 let speedofspawn = 1000;
+let sqpicker = true;
 setInterval(function(){
   if(gameover){
-    //if stack is not empty
-    if(!stack.isEmpty()){ 
+    if(!stack.isEmpty() && sqpicker){ 
       let temp = stack.pop();
       spawnLocation(temp);
       queue.enqueue(temp);
+      if(stack.isEmpty()) sqpicker = false;
     }
     else{
       let temp = queue.dequeue();
       spawnLocation(temp);
       queue.enqueue(temp);
+      if(queue.isEmpty()) sqpicker = true;
     }
       //check if any point is in the zone
       for(let i = 0; i<otherpoints.length;i++){
